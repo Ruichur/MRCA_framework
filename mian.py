@@ -17,11 +17,9 @@ class MeasurementModel:
         dy = that_state[1] - this_state[1]
         d = np.hypot(dx, dy)
 
-        # 防止除以零
         if d < 1e-6:
             return np.zeros((1, 3)), 0.0
 
-        # 测量矩阵
         H = np.array([[-dx / d, -dy / d, 0]])
 
         noise = 0.05
@@ -33,11 +31,9 @@ class MeasurementModel:
         dy = that_state[1] - this_state[1]
         d_sq = dx ** 2 + dy ** 2
 
-        # 防止除以零
         if d_sq < 1e-6:
             return np.zeros((1, 3)), 0.0
 
-        # 测量矩阵
         H = np.array([[-dy / d_sq, dx / d_sq, -1]])
 
         noise = 0.05
@@ -143,7 +139,6 @@ class KalmanFilter_Cross_Covariances:
         else:
             current_omega = omega
 
-        # 执行CI融合
         state, covariance = self.fuse_with_ci(state, covariance, other_state, other_cov, current_omega)
 
         return state, covariance
@@ -196,13 +191,13 @@ def residual(theta, positions, orientations, distances, angles):
 
 @dataclass
 class AnchorBuffer:
-    robot_states: List[np.ndarray] = field(default_factory=list)  # 存储机器人状态 [x, y, theta]
-    robot_cov: List[np.ndarray] = field(default_factory=list)  # 机器人协方差矩阵,3*3
-    measurement: List[np.ndarray] = field(default_factory=list)  # 存储距离和角度测量值
-    count: int = 0  # 当前积累的测量次数
-    last_estimate: np.ndarray = field(default_factory=lambda: np.array([np.nan, np.nan, 0]))  # 上一次的估计值
+    robot_states: List[np.ndarray] = field(default_factory=list) 
+    robot_cov: List[np.ndarray] = field(default_factory=list) 
+    measurement: List[np.ndarray] = field(default_factory=list)
+    count: int = 0 
+    last_estimate: np.ndarray = field(default_factory=lambda: np.array([np.nan, np.nan, 0]))
     last_cov: np.ndarray = field(default_factory=lambda: np.array([np.nan, np.nan, 0]))
-    initialized: List[bool] = field(default_factory=lambda: [False] * 15)   # 存储机器人状态 [true or false]
+    initialized: List[bool] = field(default_factory=lambda: [False] * 15)
 
 
 class CooperativeCognition:
@@ -212,10 +207,8 @@ class CooperativeCognition:
         self.num_anchors = num_anchors
         self.initial_guess = np.array([0, 0])
 
-        # 初始化锚节点缓冲区
         self.anchor_buffers = {aid: AnchorBuffer() for aid in range(6, 21)}
 
-        # 初始化地图
         self.map_global = np.full((num_anchors, 3), np.nan)
         self.initial_state_all = np.full((num_anchors, 3), np.nan)
         self.local_maps = [np.full((num_anchors, 3), np.nan) for _ in range(num_robots)]
@@ -458,19 +451,17 @@ class MRCAFramework:
 
         errs_last_t = []
         for rid in range(1, 6):
-            # 估计：取 trajectories 最后一行（必须保证已按时间排序）
             est_xy = self.robot_states[rid - 1, :2]
 
-            # 真值：用排序后的最后一个键
             true_xy = np.array(self.robot_data[rid].groundtruth[t])[:2]
 
             errs_last_t.append(np.linalg.norm(est_xy - true_xy))
 
-        print("最后一时刻平均误差:", np.mean(errs_last_t))
+        print("CUMULATIVE POSITION RMSE:", np.mean(errs_last_t))
 
 if __name__ == "__main__":
     # 配置参数
     buffer_num = 15
-    DATA_FOLDER = r"D:\Research\CODEandDATA\DATA\UTIAS_MRCLAM\DATA\DATA_add_low_cost_imu_error\DATA_output7"
+    DATA_FOLDER = r"\DATA_output7"
     system = MRCAFramework(DATA_FOLDER)
     system.run()
