@@ -1,4 +1,4 @@
-# MRCA Framework: Multi-Robot Collaborative Localization and Mapping
+# MRCA Framework: A framework of state estimation for Multi-Robot Cooperative Positioning
 
 ## Installation
 
