@@ -51,6 +51,7 @@ DATA_FOLDER = "/DATASET1"
 
 ### Number of robots and anchors
 num_robots = 5
+
 num_anchors = 15
 
 ## Citation
