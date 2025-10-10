@@ -314,7 +314,6 @@ class CooperativeCognition:
 
             
             if rmse > self.initialization_threshold:
-                print(f"锚节点 {anchor_id} 初始化质量差，RMSE: {rmse:.3f}")
                 return
 
            
@@ -338,10 +337,10 @@ class CooperativeCognition:
             self.initial_state_all[anchor_idx] = initial_state
             self.map_global[anchor_idx] = initial_state
 
-            print(f"Anchor {anchor_id} initialized，RMSE: {rmse:.3f}")
+            print(f"Anchor {anchor_id} initialized successfully，RMSE: {rmse:.3f}")
 
         except Exception as e:
-            print(f"Anchor {anchor_id} initialization failed: {e}")
+            print(f"Anchor {anchor_id} failed to initialize: {e}")
 
     def synchronize_maps(self, robot_id, neighbor_id):
         ridx = robot_id - 1
@@ -511,7 +510,7 @@ class MRCAFramework:
                                 )
             
             for rid in range(1, self.num_robots + 1):
-                est = self.robot_states[rid - 1]  # [x y theta]
+                est = self.robot_states[rid - 1]  
                 gt = self.robot_data[rid].groundtruth.get(t, np.full(3, np.nan))
                 self.records[rid].append((t, *est, *gt))
 
@@ -534,4 +533,5 @@ if __name__ == "__main__":
     DATA_FOLDER = r"DATASET1"
     system = MRCAFramework(DATA_FOLDER)
     system.run()
+
 
