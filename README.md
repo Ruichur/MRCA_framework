@@ -47,7 +47,7 @@ mrca-framework/
 buffer_num = 15  
 
 ### Dataset path
-DATA_FOLDER = "/DATA_output7"
+DATA_FOLDER = "/DATASET1"
 
 ### Number of robots and anchors
 num_robots = 5
